@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "../../../../../lib/supabaseServer";
-import { callAIJson, generateGatekeeperPrompt, GATEKEEPER_SYSTEM_PROMPT } from "../../../../../lib/ai";
+import { createClient } from "@/lib/supabaseServer";
+import { callAIJson, generateGatekeeperPrompt, GATEKEEPER_SYSTEM_PROMPT } from "@/lib/ai";
 
 export const runtime = "edge";
 export const preferredRegion = ["bom1"]; // Mumbai region for DPDP 2023 compliance

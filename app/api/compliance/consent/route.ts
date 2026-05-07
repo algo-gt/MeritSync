@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "../../../lib/supabaseServer";
+import { createClient } from "@/lib/supabaseServer";
 
 async function hashIp(ip: string): Promise<string> {
   const buffer = new TextEncoder().encode(ip);

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "../../../../../lib/supabaseServer";
-import { callAIJson } from "../../../../../lib/ai";
+import { createClient } from "@/lib/supabaseServer";
+import { callAIJson } from "@/lib/ai";
 
 export async function POST(req: Request) {
   const supabase = await createClient();
