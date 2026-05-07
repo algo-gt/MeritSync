@@ -1,6 +1,5 @@
-import { createRouteHandlerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { createClient } from "../../../lib/supabaseServer";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -10,10 +9,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid role payload." }, { status: 400 });
   }
 
-  const supabase = createRouteHandlerSupabaseClient({
-    cookies,
-    headers
-  });
+  const supabase = await createClient();
   const { data: sessionData } = await supabase.auth.getSession();
 
   if (!sessionData?.session) {
