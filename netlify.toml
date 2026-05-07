@@ -1,19 +1,16 @@
 [build]
-  command = "npm run build"
-  publish = ".next"
+command = "npm run build"
+publish = ".next"
 
 [build.environment]
-  NEXT_USE_NETLIFY_EDGE = "true"
+NEXT_USE_NETLIFY_EDGE = "true"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+package = "@netlify/plugin-nextjs"
 
 [functions]
-  # Mumbai region for AWS Lambda (Netlify's underlying infra)
-  region = "ap-south-1"
+region = "ap-south-1"
 
-# Edge Functions (Mumbai is not always guaranteed as a specific 'edge' region, 
-# but Netlify routes traffic efficiently within India)
 [[edge_functions]]
-  path = "/*"
-  function = "proxy"
+path = "/*"
+function = "proxy"
