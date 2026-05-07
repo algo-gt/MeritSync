@@ -26,8 +26,8 @@ export default function HomePage() {
       <div className="w-full max-w-xl rounded-3xl border border-white/10 bg-slate-950/80 p-8 shadow-soft">
         <div className="mb-6 space-y-2">
           <p className="text-sm uppercase tracking-[0.3em] text-sky-300/80">Meritsync</p>
-          <h1 className="text-3xl font-semibold text-slate-100">Secure, role-aware signup</h1>
-          <p className="text-slate-400">Authenticate using Google, email, or mobile number. Get a tailored Talent or Employer experience.</p>
+          <h1 className="text-3xl font-semibold text-slate-100">Secure, role-aware login</h1>
+          <p className="text-slate-400">Enter your work email to receive a secure OTP. Get a tailored Talent or Employer experience.</p>
         </div>
         <AuthCard />
         {loading && <p className="mt-6 text-sm text-slate-400">Loading session...</p>}

@@ -3,10 +3,6 @@
 import { useMemo, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 
-const providers = [
-  { name: "Google", provider: "google", color: "bg-red-600 hover:bg-red-500 text-white" }
-] as const;
-
 export default function AuthCard() {
   const [contact, setContact] = useState("");
   const [otp, setOtp] = useState("");
@@ -21,58 +17,28 @@ export default function AuthCard() {
     []
   );
 
-  const handleOAuth = async (provider: string) => {
-    setBusy(true);
-    setMessage(null);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: provider as "google",
-      options: {
-        redirectTo: `${window.location.origin}`
-      }
-    });
-    setBusy(false);
-    if (error) {
-      setMessage(error.message);
-    }
-  };
 
   const handleSendOtp = async () => {
-    if (!contact) {
-      setMessage("Please enter a valid email or mobile number.");
+    if (!contact || !contact.includes("@")) {
+      setMessage("Please enter a valid email address.");
       return;
     }
     setBusy(true);
     setMessage(null);
 
-    const emailMode = contact.includes("@");
-    setIsPhone(!emailMode);
-
-    let error;
-    if (emailMode) {
-      const { error: emailError } = await supabase.auth.signInWithOtp({
-        email: contact,
-        options: {
-          emailRedirectTo: `${window.location.origin}`
-        }
-      });
-      error = emailError;
-    } else {
-      const { error: phoneError } = await supabase.auth.signInWithOtp({
-        phone: contact
-      });
-      error = phoneError;
-    }
+    const { error } = await supabase.auth.signInWithOtp({
+      email: contact,
+      options: {
+        emailRedirectTo: `${window.location.origin}`
+      }
+    });
 
     setBusy(false);
     if (error) {
       setMessage(error.message);
     } else {
       setShowOtpInput(true);
-      if (emailMode) {
-        setMessage("Magic link / OTP sent — check your inbox.");
-      } else {
-        setMessage("OTP sent — check your mobile messages.");
-      }
+      setMessage("OTP code sent — check your inbox.");
     }
   };
 
@@ -85,11 +51,10 @@ export default function AuthCard() {
     setMessage(null);
 
     const { error } = await supabase.auth.verifyOtp({
-      email: !isPhone ? contact : undefined,
-      phone: isPhone ? contact : undefined,
+      email: contact,
       token: otp,
-      type: isPhone ? "sms" : "email"
-    } as any);
+      type: "email"
+    });
 
     setBusy(false);
     if (error) {
@@ -102,23 +67,10 @@ export default function AuthCard() {
 
   return (
     <section className="space-y-6">
-      <div className="grid gap-3">
-        {providers.map((item) => (
-          <button
-            key={item.provider}
-            type="button"
-            className={`${buttonStyle} ${item.color} shadow-lg shadow-black/10`}
-            onClick={() => handleOAuth(item.provider)}
-            disabled={busy}
-          >
-            Continue with {item.name}
-          </button>
-        ))}
-      </div>
 
       <div className="rounded-3xl border border-slate-800/90 bg-slate-950/90 p-5">
         <label className="block text-sm font-semibold text-slate-200" htmlFor="contact">
-          Email or Mobile Number
+          Work Email
         </label>
         <div className="mt-3 flex flex-col gap-3">
           <div className="flex gap-3">
@@ -133,7 +85,7 @@ export default function AuthCard() {
                 setMessage(null);
               }}
               className="w-full rounded-2xl border border-slate-800/90 bg-slate-900 px-4 py-3 text-sm text-slate-100 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
-              placeholder="you@company.com or +1234567890"
+              placeholder="you@company.com"
               disabled={showOtpInput && busy}
             />
             {!showOtpInput && (
