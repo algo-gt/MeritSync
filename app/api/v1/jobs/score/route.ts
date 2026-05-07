@@ -1,17 +1,12 @@
-import { createRouteHandlerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
+import { createClient } from "../../../../../lib/supabaseServer";
 import { callAIJson, generateGatekeeperPrompt, GATEKEEPER_SYSTEM_PROMPT } from "../../../../../lib/ai";
 
 export const runtime = "edge";
 export const preferredRegion = ["bom1"]; // Mumbai region for DPDP 2023 compliance
 
-
 export async function POST(req: Request) {
-  const supabase = createRouteHandlerSupabaseClient({
-    cookies,
-    headers,
-  });
+  const supabase = await createClient();
 
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

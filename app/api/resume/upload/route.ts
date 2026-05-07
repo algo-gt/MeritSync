@@ -1,10 +1,9 @@
-import { createRouteHandlerSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { cookies, headers } from "next/headers";
-import { createClient } from "@supabase/supabase-js";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
+import { createClient } from "../../../lib/supabaseServer";
 
 export async function POST(req: Request) {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
@@ -14,13 +13,10 @@ export async function POST(req: Request) {
     );
   }
 
-  const storageClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+  const storageClient = createAdminClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
     auth: { persistSession: false }
   });
-  const supabase = createRouteHandlerSupabaseClient({
-    cookies,
-    headers
-  });
+  const supabase = await createClient();
   const { data: sessionData } = await supabase.auth.getSession();
 
   if (!sessionData?.session) {
