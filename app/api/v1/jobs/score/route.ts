@@ -3,10 +3,9 @@ import { cookies, headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { callAIJson, generateGatekeeperPrompt, GATEKEEPER_SYSTEM_PROMPT } from "../../../../../lib/ai";
 
-export const config = {
-  runtime: "edge",
-  regions: ["bom1"], // Mumbai region for DPDP 2023 compliance
-};
+export const runtime = "edge";
+export const preferredRegion = ["bom1"]; // Mumbai region for DPDP 2023 compliance
+
 
 export async function POST(req: Request) {
   const supabase = createRouteHandlerSupabaseClient({

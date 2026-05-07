@@ -4,8 +4,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const supabase = createRouteHandlerSupabaseClient({
     cookies,
     headers
@@ -14,7 +15,7 @@ export async function GET(
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const jobId = params.id;
+  const jobId = id;
 
   try {
     // Verify employer ownership of the job
